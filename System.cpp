@@ -29,16 +29,16 @@ void System::cd(std::string dirname){
 }
 
 void System::cdBack(){
-	for (auto &v : directories) {
-		if (v->getDirName() == currentFolder && currentFolder != "/"){
-			path.erase(path.end()- (getCurrent().length() + 1), path.end());
-			currentFolder = v->getParent();
-		} else
-		{
-			std::cout << "You are in root folder..." << std::endl;
+	if (currentFolder != "/"){
+		for (auto &v : directories) {
+			if (v->getDirName() == currentFolder){
+				path.erase(path.end()- (getCurrent().length() + 1), path.end());
+				currentFolder = v->getParent();
+			}
 		}
-		
-	}
+	} else { std::cerr << "You are in root!" << std::endl; }
+	
+
 }
 void System::printCore(){
 	std::cout <<"username:" << path<< " & "; 
