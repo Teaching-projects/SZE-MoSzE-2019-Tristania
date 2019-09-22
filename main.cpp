@@ -23,8 +23,7 @@ int main(){
 			if (dirname == ".."){
 				filesystem.cdBack();
 			} else filesystem.cd(dirname);
-		}
-		else {
+		} else if (cmd != "exit"){
 			cerr << "The command is not valid.\n";
 		}
 	} while (cmd != "exit");
