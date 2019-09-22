@@ -24,5 +24,8 @@ int main(){
 				filesystem.cdBack();
 			} else filesystem.cd(dirname);
 		}
+		else {
+			cerr << "The command is not valid.\n";
+		}
 	} while (cmd != "exit");
 }
