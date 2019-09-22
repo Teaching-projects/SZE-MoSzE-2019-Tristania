@@ -13,6 +13,7 @@ class System{
 	public:
 		System();
 		void mkdir(std::string, std::string);
+		bool alreadyExists(std::string);
 		void ls();
 		void cd(std::string);
 		void cdBack();
