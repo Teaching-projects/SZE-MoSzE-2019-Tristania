@@ -5,30 +5,37 @@ System::System() {
 	path = "/";
 };
 
-void System::mkdir(std::string dirname, std::string current) {
-	directories.push_back(new Dir(dirname, current));
+void System::mkdir(std::string dirname) {
+	//directories.push_back(new Dir(dirname, current));
+	directories.insert(std::pair<std::string, std::string>(dirname,currentFolder));
 }
 
-std::string System::getCurrent() {
-	return currentFolder;
+void System::rm(std::string dirname) {
+	for (it = directories.begin(); it != directories.end(); it++) {
+		if (it->second == currentFolder && it->first == dirname)
+		{
+			directories.erase(dirname);
+		}
+		
+	}
 }
 
 void System::ls() {
-	for (auto &v : directories) {
-		if (v->getParent() == System::getCurrent()) {
-			std::cout << v->getDirName() << "\n";
+	for (it = directories.begin(); it != directories.end(); it++) {
+		if (it->second == currentFolder) {
+			std::cout << it->first << "\n";
 		}
 	}
 }
 
 bool System::alreadyExists(std::string dirname) {
-	bool toReturn = false;
-	for (auto &d : directories) {
-		if (d->getDirName() == dirname) {
-			toReturn = true;
+	for (it = directories.begin(); it != directories.end(); it++) {
+		if (it->first == dirname && it->second == currentFolder)
+		{
+			return true;
 		}
 	}
-	return toReturn;
+	return false;
 }
 
 void System::cd(std::string dirname) {
@@ -38,10 +45,11 @@ void System::cd(std::string dirname) {
 
 void System::cdBack() {
 	if (currentFolder != "/") {
-		for (auto &v : directories) {
-			if (v->getDirName() == currentFolder) {
-				path.erase(path.end() - (getCurrent().length() + 1), path.end());
-				currentFolder = v->getParent();
+		for (it = directories.begin(); it != directories.end(); it++) {
+			if (it->first == currentFolder)
+			{
+				path.erase(path.end() - (currentFolder.length() + 1), path.end());
+				currentFolder = it->second;
 			}
 		}
 	}

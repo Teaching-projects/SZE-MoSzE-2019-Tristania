@@ -1,4 +1,4 @@
-#include "Dir.h"
+//#include "Dir.h"
 #include "System.h"
 
 #include <iostream>
@@ -14,7 +14,7 @@ int main() {
 		if (cmd == "mkdir") {
 			string dirname;
 			cin >> dirname;
-			filesystem.mkdir(dirname, filesystem.getCurrent());
+			filesystem.mkdir(dirname);
 		}
 		else if (cmd == "ls") {
 			filesystem.ls();
@@ -33,6 +33,11 @@ int main() {
 					filesystem.cd(dirname);
 				}
 			}
+		}
+		else if (cmd == "rm") {
+			string dirname;
+			cin >>dirname;
+			filesystem.rm(dirname);
 		}
 		else if (cmd != "exit") {
 			cerr << "The command is not valid.\n";
