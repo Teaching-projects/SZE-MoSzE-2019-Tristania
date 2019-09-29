@@ -4,13 +4,13 @@
 #include <string>
 #include <iostream>
 
-class Dir{
-    std::string name;
-    std::string parent;
-    public: 
-        Dir(std::string , std::string);
-        std::string getDirName();
-        std::string getParent();
+class Dir {
+	std::string name;
+	std::string parent;
+public:
+	Dir(std::string, std::string);
+	std::string getDirName();
+	std::string getParent();
 };
 
-#endif
+#endif#pragma once

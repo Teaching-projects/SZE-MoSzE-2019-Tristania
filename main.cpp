@@ -1,7 +1,7 @@
+#include <iostream>
 #include "Dir.h"
 #include "System.h"
 
-#include <iostream>
 using namespace std;
 
 int main() {
@@ -32,6 +32,16 @@ int main() {
 				else {
 					filesystem.cd(dirname);
 				}
+			}
+		}
+		else if(cmd=="rm"){
+			string dirname;
+			cin >> dirname;
+			if (!filesystem.alreadyExists(dirname)) {
+				cerr << "No directory found with the given name. Please try again with another name!\n";
+			}
+			else {
+				filesystem.rm(dirname);
 			}
 		}
 		else if (cmd != "exit") {
