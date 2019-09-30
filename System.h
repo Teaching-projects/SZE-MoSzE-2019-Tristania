@@ -11,14 +11,19 @@ class System {
 	std::string path;
 public:
 	System();
-	void mkdir(std::string, std::string);
+	bool hasChildren(std::string);
 	bool alreadyExists(std::string);
+
+	void mkdir(std::string, std::string);
 	void ls();
 	void cd(std::string);
 	void cdBack();
 	void rm(std::string);
+	void rmrf(std::string);
 	void printCore();
+
 	std::string getCurrent();
+	std::string getChild(std::string);
 };
 
 #endif

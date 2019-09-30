@@ -13,4 +13,5 @@ public:
 	std::string getParent();
 };
 
-#endif#pragma once
+#endif
+#pragma once

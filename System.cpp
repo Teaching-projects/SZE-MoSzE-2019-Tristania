@@ -13,6 +13,15 @@ std::string System::getCurrent() {
 	return currentFolder;
 }
 
+std::string System::getChild(std::string dirname) {
+	for (auto &d : directories) {
+		if (d->getParent() == dirname) {
+			return d->getDirName();
+		}
+	}
+	return "Error. Child not found!";
+}
+
 void System::ls() {
 	for (auto &v : directories) {
 		if (v->getParent() == System::getCurrent()) {
@@ -49,23 +58,34 @@ void System::cdBack() {
 
 }
 
-void System::rm(std::string dirname){
-	bool hasChildren = false;
+bool System::hasChildren(std::string dirname) {
 	for (auto &d : directories) {
 		if (d->getParent() == dirname) {
-			hasChildren = true;
+			return true;
 		}
 	}
-	
-	if (hasChildren) {
+	return false;
+}
+
+void System::rm(std::string dirname) {
+	if (hasChildren(dirname)) {
 		std::cerr << "This directory cannot be removed as it contains other directory/directories!\n";
 	}
 	else {
-		for (unsigned int i = 0; i < directories.size();i++) {
+		for (unsigned i = 0; i < directories.size();i++) {
 			if (directories[i]->getDirName() == dirname) {
 				directories.erase(directories.begin() + i);
 			}
 		}
+	}
+}
+
+void System::rmrf(std::string dirname) {
+	for (auto const&d : directories) {
+		while (hasChildren(dirname)) {
+			rmrf(getChild(dirname));
+		}
+		rm(dirname);
 	}
 }
 
