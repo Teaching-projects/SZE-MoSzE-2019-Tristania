@@ -15,7 +15,7 @@ jobs:
       - run: './a.out < Tests/test.txt > Test/out.txt'
       - run: 'diff Tests/out.txt Tests/testresult.txt'
 
-      - store_artifact:
+      - store_artifacts:
           path: a.out
           destination: Binary file
 workflows:
