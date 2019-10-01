@@ -11,19 +11,20 @@ class System {
 	std::string path;
 public:
 	System();
-	bool hasChildren(std::string);
-	bool alreadyExists(std::string);
+	std::string getCurrent() const;
+	std::string getChild(std::string) const;
+
+	void printCore() const;
+
+	bool alreadyExists(std::string) const;
+	bool hasChildren(std::string) const;
 
 	void mkdir(std::string, std::string);
-	void ls();
+	void ls() const;
 	void cd(std::string);
 	void cdBack();
 	void rm(std::string);
 	void rmrf(std::string);
-	void printCore();
-
-	std::string getCurrent();
-	std::string getChild(std::string);
 };
 
 #endif

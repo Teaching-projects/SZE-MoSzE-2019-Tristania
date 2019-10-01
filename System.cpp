@@ -5,15 +5,11 @@ System::System() {
 	path = "/";
 };
 
-void System::mkdir(std::string dirname, std::string current) {
-	directories.push_back(new Dir(dirname, current));
-}
-
-std::string System::getCurrent() {
+std::string System::getCurrent() const {
 	return currentFolder;
 }
 
-std::string System::getChild(std::string dirname) {
+std::string System::getChild(std::string dirname) const {
 	for (auto &d : directories) {
 		if (d->getParent() == dirname) {
 			return d->getDirName();
@@ -22,15 +18,11 @@ std::string System::getChild(std::string dirname) {
 	return "Error. Child not found!";
 }
 
-void System::ls() {
-	for (auto &v : directories) {
-		if (v->getParent() == System::getCurrent()) {
-			std::cout << v->getDirName() << "\n";
-		}
-	}
+void System::printCore() const {
+	std::cout << "gabor-mbp:" << currentFolder << " gabor$ ";
 }
 
-bool System::alreadyExists(std::string dirname) {
+bool System::alreadyExists(std::string dirname) const {
 	bool toReturn = false;
 	for (auto &d : directories) {
 		if (d->getDirName() == dirname) {
@@ -38,6 +30,27 @@ bool System::alreadyExists(std::string dirname) {
 		}
 	}
 	return toReturn;
+}
+
+bool System::hasChildren(std::string dirname) const {
+	for (auto &d : directories) {
+		if (d->getParent() == dirname) {
+			return true;
+		}
+	}
+	return false;
+}
+
+void System::mkdir(std::string dirname, std::string current) {
+	directories.push_back(new Dir(dirname, current));
+}
+
+void System::ls() const {
+	for (auto &v : directories) {
+		if (v->getParent() == System::getCurrent()) {
+			std::cout << v->getDirName() << "\n";
+		}
+	}
 }
 
 void System::cd(std::string dirname) {
@@ -56,15 +69,6 @@ void System::cdBack() {
 	}
 	else { std::cerr << "You are in root!" << std::endl; }
 
-}
-
-bool System::hasChildren(std::string dirname) {
-	for (auto &d : directories) {
-		if (d->getParent() == dirname) {
-			return true;
-		}
-	}
-	return false;
 }
 
 void System::rm(std::string dirname) {
@@ -87,8 +91,4 @@ void System::rmrf(std::string dirname) {
 		}
 		rm(dirname);
 	}
-}
-
-void System::printCore() {
-	std::cout << "gabor-mbp:" << currentFolder << " gabor$ ";
 }

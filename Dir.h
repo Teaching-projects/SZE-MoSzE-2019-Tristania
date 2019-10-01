@@ -9,8 +9,8 @@ class Dir {
 	std::string parent;
 public:
 	Dir(std::string, std::string);
-	std::string getDirName();
-	std::string getParent();
+	std::string getDirName() const;
+	std::string getParent() const;
 };
 
 #endif

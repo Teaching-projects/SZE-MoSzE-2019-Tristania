@@ -2,10 +2,10 @@
 
 Dir::Dir(std::string name, std::string parent) :name(name), parent(parent) {};
 
-std::string Dir::getDirName() {
+std::string Dir::getDirName() const {
 	return name;
 }
 
-std::string Dir::getParent() {
+std::string Dir::getParent() const {
 	return parent;
 }
