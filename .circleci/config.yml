@@ -3,8 +3,10 @@ jobs:
   build:
     machine:
       image: ubuntu-1604:201903-01
+    working_directory: ~/SZE-MoSzE-2019-Tristania/Tests
     steps:
-      - checkout
+      - checkout:
+          path: ~/SZE-MoSzE-2019-Tristania
       - run: 'g++ *.cpp -std=c++11'
     persist_to_workspace:
       paths: a.out
@@ -12,8 +14,8 @@ jobs:
     machine:
       image: ubuntu-1604:201903-01
     steps:
-      - run: './a.out < Tristania/Tests/test.txt > Tristania/Tests/out.txt'
-      - run: 'diff Tristania/Tests/out.txt Tristania/Tests/testresult.txt'
+      - run: './a.out < Tests/test.txt > Tests/out.txt'
+      - run: 'diff Tests/out.txt Tests/testresult.txt'
 
       - store_artifacts:
           path: a.out
