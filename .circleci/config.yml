@@ -12,8 +12,8 @@ jobs:
     machine:
       image: ubuntu-1604:201903-01
     steps:
-      - run: './a.out < Tests/test.txt > Test/out.txt'
-      - run: 'diff Tests/out.txt Tests/testresult.txt'
+      - run: './a.out < Tristania/Tests/test.txt > Tristania/Tests/out.txt'
+      - run: 'diff Tristania/Tests/out.txt Tristania/Tests/testresult.txt'
 
       - store_artifacts:
           path: a.out
