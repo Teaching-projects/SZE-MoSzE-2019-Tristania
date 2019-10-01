@@ -1,5 +1,4 @@
-#ifndef _dir_h_
-#define _dir_h_
+#pragma	once
 
 #include <string>
 #include <iostream>
@@ -12,6 +11,3 @@ public:
 	std::string getDirName() const;
 	std::string getParent() const;
 };
-
-#endif
-#pragma once

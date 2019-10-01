@@ -46,9 +46,9 @@ void System::mkdir(std::string dirname, std::string current) {
 }
 
 void System::ls() const {
-	for (auto &v : directories) {
-		if (v->getParent() == System::getCurrent()) {
-			std::cout << v->getDirName() << "\n";
+	for (auto &d : directories) {
+		if (d->getParent() == System::getCurrent()) {
+			std::cout << d->getDirName() << "\n";
 		}
 	}
 }

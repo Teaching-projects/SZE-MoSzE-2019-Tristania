@@ -5,7 +5,7 @@ jobs:
       image: ubuntu-1604:201903-01
     steps:
       - checkout
-      - run: 'g++ *.cpp'
+      - run: 'g++ *.cpp -std=c++11'
     persist_to_workspace:
       paths: a.out
   test:

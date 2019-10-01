@@ -1,5 +1,4 @@
-#ifndef _system_h_
-#define _system_h_
+#pragma once
 
 #include "Dir.h"
 #include <vector>
@@ -7,6 +6,7 @@
 
 class System {
 	std::vector<Dir*> directories;
+	std::vector<Dir*>::iterator it;
 	std::string currentFolder;
 	std::string path;
 public:
@@ -26,6 +26,3 @@ public:
 	void rm(std::string);
 	void rmrf(std::string);
 };
-
-#endif
-#pragma once
