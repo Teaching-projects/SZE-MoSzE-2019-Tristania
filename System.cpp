@@ -90,5 +90,5 @@ void System::rmrf(std::string dirname) {
 }
 
 void System::printCore() {
-	std::cout << "username:" << path << " & ";
+	std::cout << "gabor-mbp:" << currentFolder << " gabor$ ";
 }

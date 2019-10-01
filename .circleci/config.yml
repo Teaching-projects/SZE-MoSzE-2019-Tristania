@@ -1,20 +1,28 @@
 version: 2
 jobs:
-  kiir:
-    machine:
-      image: ubuntu-1604:201903-01
-    steps:
-      - checkout
-      - run: cat main.cpp
   build:
     machine:
       image: ubuntu-1604:201903-01
     steps:
       - checkout
-      - run: g++ *.cpp
+      - run: 'g++ *.cpp'
+    persist_to_workspace:
+      paths: a.out
+  test:
+    machine:
+      image: ubuntu-1604:201903-01
+    steps:
+      - run: './a.out < Tests/test.txt > Test/out.txt'
+      - run: 'diff Tests/out.txt Tests/testresult.txt'
+
+      - store_artifact:
+        path: 'a.out'
+        destination: 'Binary file'
 workflows:
   version: 2
   build_and_test:
     jobs:
-      - kiir
       - build
+      - test:
+        requires:
+          - build
