@@ -16,7 +16,7 @@ int main() {
 			cin >> dirname;
 			if (!filesystem.alreadyExists(dirname)) {
 				filesystem.mkdir(dirname, filesystem.getCurrent());
-			} else cerr <<"This directory name already taken. Please choose other!" << endl;
+			} else cerr <<"This directory name already taken. Please try again with another name!" << endl;
 		}
 		else if (cmd == "ls") {
 			filesystem.ls();
