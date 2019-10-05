@@ -1,12 +1,13 @@
 #pragma once
 
-#include "Dir.h"
+#include "Dir.hpp"
+#include "File.hpp"
 #include <vector>
 #include <iostream>
 
 class System {
 	std::vector<Dir*> directories;
-	std::vector<Dir*>::iterator it;
+    std::vector<File*> files;
 	std::string currentFolder;
 	std::string path;
 public:
@@ -19,7 +20,8 @@ public:
 	bool alreadyExists(std::string) const;
 	bool hasChildren(std::string) const;
 
-	void mkdir(std::string, std::string);
+	void mkdir(std::string);
+    void touch(std::string);
 	void ls() const;
 	void cd(std::string);
 	void cdBack();

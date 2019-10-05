@@ -1,4 +1,4 @@
-#include "Dir.h"
+#include "Dir.hpp"
 
 Dir::Dir(std::string name, std::string parent) :name(name), parent(parent) {};
 

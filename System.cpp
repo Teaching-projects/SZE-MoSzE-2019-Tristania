@@ -1,13 +1,9 @@
-#include "System.h"
+#include "System.hpp"
 
 System::System() {
 	currentFolder = "/";
 	path = "/";
 };
-
-std::string System::getCurrent() const {
-	return currentFolder;
-}
 
 std::string System::getChild(std::string dirname) const {
 	for (auto &d : directories) {
@@ -25,10 +21,16 @@ void System::printCore() const {
 bool System::alreadyExists(std::string dirname) const {
 	bool toReturn = false;
 	for (auto &d : directories) {
-		if (d->getDirName() == dirname) {
+		if (d->getDirName() == dirname && d->getParent() == currentFolder) {
 			toReturn = true;
 		}
 	}
+    for (auto &f : files) {
+        if (f->getName() == dirname && f->getParent() == currentFolder) {
+            toReturn = true;
+        }
+    }
+    
 	return toReturn;
 }
 
@@ -41,16 +43,21 @@ bool System::hasChildren(std::string dirname) const {
 	return false;
 }
 
-void System::mkdir(std::string dirname, std::string current) {
-	directories.push_back(new Dir(dirname, current));
+void System::mkdir(std::string dirname) {
+	directories.push_back(new Dir(dirname, currentFolder));
 }
 
 void System::ls() const {
 	for (auto &d : directories) {
-		if (d->getParent() == System::getCurrent()) {
-			std::cout << d->getDirName() << "\n";
+		if (d->getParent() == currentFolder) {
+            std::cout <<d->getDirName() <<"/" <<std::endl;;
 		}
 	}
+    for (auto &f : files) {
+        if (f->getParent() == currentFolder) {
+            std::cout <<f->getName() <<std::endl;
+        }
+    }
 }
 
 void System::cd(std::string dirname) {
@@ -62,7 +69,6 @@ void System::cdBack() {
 	if (currentFolder != "/") {
 		for (auto &v : directories) {
 			if (v->getDirName() == currentFolder) {
-				path.erase(path.end() - (getCurrent().length() + 1), path.end());
 				currentFolder = v->getParent();
 			}
 		}
@@ -82,13 +88,23 @@ void System::rm(std::string dirname) {
 			}
 		}
 	}
+
+    for (unsigned i = 0; i< files.size();i++) {
+        if (files[i]->getName() == dirname) {
+            files.erase(files.begin() + i);
+        }
+    }
 }
 
 void System::rmrf(std::string dirname) {
-	for (auto const&d : directories) {
-		while (hasChildren(dirname)) {
-			rmrf(getChild(dirname));
-		}
-		rm(dirname);
-	}
+    while (hasChildren(dirname)) {
+        rmrf(getChild(dirname));
+    }
+    rm(dirname);
+}
+
+void System::touch(std::string fname) {
+    if (!alreadyExists(fname)) {
+        files.push_back(new File(fname, currentFolder));
+    } else std::cerr <<"This name already taken, please choose other."<<std::endl;
 }

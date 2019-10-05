@@ -1,6 +1,7 @@
 #include <iostream>
-#include "Dir.h"
-#include "System.h"
+#include "Dir.hpp"
+#include "File.hpp"
+#include "System.hpp"
 
 using namespace std;
 
@@ -15,7 +16,7 @@ int main() {
 			string dirname;
 			cin >> dirname;
 			if (!filesystem.alreadyExists(dirname)) {
-				filesystem.mkdir(dirname, filesystem.getCurrent());
+				filesystem.mkdir(dirname);
 			} else cerr <<"This directory name already taken. Please try again with another name!" << endl;
 		}
 		else if (cmd == "ls") {
@@ -57,6 +58,12 @@ int main() {
 				}	
 			}
 		}
+        else if(cmd=="touch") {
+            string fname;
+            cin>>fname;
+            
+            filesystem.touch(fname);
+        }
 		else if (cmd != "exit") {
 			cerr << "The command is not valid.\n";
 		}
