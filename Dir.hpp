@@ -4,10 +4,10 @@
 #include <iostream>
 
 class Dir {
-	std::string name;
-	std::string parent;
+    std::string name;
+	Dir* parent;
 public:
-	Dir(std::string, std::string);
+	Dir(std::string, Dir*);
 	std::string getDirName() const;
-	std::string getParent() const;
+	Dir* getParent() const;
 };

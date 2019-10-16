@@ -1,13 +1,13 @@
 #include "System.hpp"
+#include <sstream>
 
 System::System() {
-	currentFolder = "/";
-	path = "/";
+    currentFolder = new Dir("root", nullptr);
 };
 
 std::string System::getChild(std::string dirname) const {
 	for (auto &d : directories) {
-		if (d->getParent() == dirname) {
+		if (d->getParent()->getDirName() == dirname) {
 			return d->getDirName();
 		}
 	}
@@ -15,18 +15,18 @@ std::string System::getChild(std::string dirname) const {
 }
 
 void System::printCore() const {
-	std::cout << "gabor-mbp:" << currentFolder << " gabor$ ";
+	std::cout << "gabor-mbp:" << currentFolder->getDirName() << " gabor$ ";
 }
 
 bool System::alreadyExists(std::string dirname) const {
 	bool toReturn = false;
 	for (auto &d : directories) {
-		if (d->getDirName() == dirname && d->getParent() == currentFolder) {
+		if (d->getDirName() == dirname && d->getParent()->getDirName() == currentFolder->getDirName()) {
 			toReturn = true;
 		}
 	}
     for (auto &f : files) {
-        if (f->getName() == dirname && f->getParent() == currentFolder) {
+        if (f->getName() == dirname && f->getParent()->getDirName() == currentFolder->getDirName()) {
             toReturn = true;
         }
     }
@@ -36,18 +36,50 @@ bool System::alreadyExists(std::string dirname) const {
 
 bool System::hasChildren(std::string dirname) const {
 	for (auto &d : directories) {
-		if (d->getParent() == dirname) {
+		if (d->getParent()->getDirName() == dirname) {
 			return true;
 		}
 	}
 	return false;
 }
 
-void System::mkdir(std::string dirname) {
-	directories.push_back(new Dir(dirname, currentFolder));
+void System::goToRoot(){
+    while (currentFolder->getDirName() != "root") {
+        cdBack();
+    }
 }
 
-void System::ls() const {
+std::string System::goToFolder(std::string dirname) {
+    std::stringstream ss(dirname);
+    std::string token;
+    std::vector<std::string> tokens;
+    while(getline(ss, token, '/')) {
+        tokens.push_back(token);
+    }
+    std::string workdir = tokens.back();
+    tokens.pop_back();
+    for(auto &t : tokens) {
+        cd(t);
+    }
+    return workdir;
+}
+
+void System::mkdir(std::string dirname) {
+    if (dirname.find("/") != std::string::npos) {
+        Dir* current = currentFolder;
+        goToRoot();
+        
+        directories.push_back(new Dir(goToFolder(dirname),currentFolder));
+        currentFolder = current;
+        
+    } else {
+        if (!alreadyExists(dirname)) {
+            directories.push_back(new Dir(dirname, currentFolder));
+        } else std::cerr << "This directory name is already taken. Please try again with another name!" <<std::endl;
+    }
+}
+
+void System::ls() {
 	for (auto &d : directories) {
 		if (d->getParent() == currentFolder) {
             std::cout <<d->getDirName() <<"/" <<std::endl;;
@@ -61,14 +93,28 @@ void System::ls() const {
 }
 
 void System::cd(std::string dirname) {
-	currentFolder = dirname;
-	path += dirname + "/";
+    if (dirname.find("/") != std::string::npos) {
+        goToRoot();
+        std::stringstream ss(dirname);
+        std::string token;
+        while (getline(ss, token, '/')) {
+            cd(token);
+        }
+    } else {
+        if (alreadyExists(dirname)) {
+            for(Dir* &d : directories) {
+                if (d->getDirName() == dirname && d->getParent() == currentFolder) {
+                    currentFolder = d;
+                }
+            }
+        } else std::cerr << "No directory found with the given name. Please try again with another name!" << std::endl;
+    }
 }
 
 void System::cdBack() {
-	if (currentFolder != "/") {
+	if (currentFolder->getDirName() != "root") {
 		for (auto &v : directories) {
-			if (v->getDirName() == currentFolder) {
+			if (v->getDirName() == currentFolder->getDirName()) {
 				currentFolder = v->getParent();
 			}
 		}
@@ -78,33 +124,74 @@ void System::cdBack() {
 }
 
 void System::rm(std::string dirname) {
-	if (hasChildren(dirname)) {
-		std::cerr << "This directory cannot be removed as it contains other directory/directories!\n";
-	}
-	else {
-		for (unsigned i = 0; i < directories.size();i++) {
-			if (directories[i]->getDirName() == dirname) {
-				directories.erase(directories.begin() + i);
-			}
-		}
-	}
+    if (dirname.find("/") != std::string::npos) {
+        Dir* current = currentFolder;
+        goToRoot();
+        std::string workdir = goToFolder(dirname);
+        if (hasChildren(workdir)) {
+            std::cerr << "This directory cannot be removed as it contains other directories/ files!\n";
+        } else if (!alreadyExists(workdir)) {
+            std::cerr << "No directory found with the given name. Please try again with another name!" << std::endl;
+        }
+        else {
+            for (unsigned i = 0; i < directories.size();i++) {
+                if (directories[i]->getDirName() == workdir) {
+                    directories.erase(directories.begin() + i);
+                }
+            }
+            
+            for (unsigned i = 0; i< files.size();i++) {
+                if (files[i]->getName() == dirname) {
+                    files.erase(files.begin() + i);
+                }
+            }
+        }
+        currentFolder = current;
+    }
+    else {
+        if (hasChildren(dirname)) {
+            std::cerr << "This directory cannot be removed as it contains other directories/ files!\n";
+        } else if (!alreadyExists(dirname)) {
+            std::cerr << "No directory found with the given name. Please try again with another name!" << std::endl;
+        }
+        else {
+            for (unsigned i = 0; i < directories.size();i++) {
+                if (directories[i]->getDirName() == dirname) {
+                    directories.erase(directories.begin() + i);
+                }
+            }
+        }
 
-    for (unsigned i = 0; i< files.size();i++) {
-        if (files[i]->getName() == dirname) {
-            files.erase(files.begin() + i);
+        for (unsigned i = 0; i< files.size();i++) {
+            if (files[i]->getName() == dirname) {
+                files.erase(files.begin() + i);
+            }
         }
     }
 }
 
 void System::rmrf(std::string dirname) {
-    while (hasChildren(dirname)) {
-        rmrf(getChild(dirname));
+    if (!alreadyExists(dirname)) {
+        std::cerr << "No directory found with the given name. Please try again with another name!" << std::endl;
+    } else {
+        while (hasChildren(dirname)) {
+            rmrf(getChild(dirname));
+        }
+        rm(dirname);
     }
-    rm(dirname);
 }
 
 void System::touch(std::string fname) {
-    if (!alreadyExists(fname)) {
-        files.push_back(new File(fname, currentFolder));
-    } else std::cerr <<"This name already taken, please choose other."<<std::endl;
+    if (fname.find("/") != std::string::npos) {
+        Dir* current = currentFolder;
+        goToRoot();
+        
+        files.push_back(new File(goToFolder(fname),currentFolder));
+        currentFolder = current;
+        
+    } else {
+        if (!alreadyExists(fname)) {
+            files.push_back(new File(fname, currentFolder));
+        } else std::cerr << "This file name is already taken. Please try again with another name!" <<std::endl;
+    }
 }

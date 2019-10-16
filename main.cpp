@@ -15,10 +15,8 @@ int main() {
 		if (cmd == "mkdir") {
 			string dirname;
 			cin >> dirname;
-			if (!filesystem.alreadyExists(dirname)) {
-				filesystem.mkdir(dirname);
-			} else cerr <<"This directory name already taken. Please try again with another name!" << endl;
-		}
+            filesystem.mkdir(dirname);
+        }
 		else if (cmd == "ls") {
 			filesystem.ls();
 		}
@@ -29,12 +27,7 @@ int main() {
 				filesystem.cdBack();
 			}
 			else {
-				if (!filesystem.alreadyExists(dirname)) {
-					cerr << "No directory found with the given name. Please try again with another name!\n";
-				}
-				else {
-					filesystem.cd(dirname);
-				}
+                filesystem.cd(dirname);
 			}
 		}
 		else if(cmd=="rm"){
@@ -44,18 +37,9 @@ int main() {
 			if (second == "-rf") {
 				string dirname;
 				cin >> dirname;
-				if (!filesystem.alreadyExists(dirname)) {
-					cerr << "No directory found with the given name. Please try again with another name!\n";
-				}else {
-					filesystem.rmrf(dirname);
-				}
+                filesystem.rmrf(dirname);
 			} else {
-				if (!filesystem.alreadyExists(second)) {
-					cerr << "No directory found with the given name. Please try again with another name!\n";
-				}
-				else {
-					filesystem.rm(second);
-				}	
+                filesystem.rm(second);
 			}
 		}
         else if(cmd=="touch") {

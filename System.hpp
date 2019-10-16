@@ -8,8 +8,7 @@
 class System {
 	std::vector<Dir*> directories;
     std::vector<File*> files;
-	std::string currentFolder;
-	std::string path;
+	Dir* currentFolder;
 public:
 	System();
 	std::string getCurrent() const;
@@ -19,10 +18,13 @@ public:
 
 	bool alreadyExists(std::string) const;
 	bool hasChildren(std::string) const;
+    
+    void goToRoot();
+    std::string goToFolder(std::string);
 
 	void mkdir(std::string);
     void touch(std::string);
-	void ls() const;
+	void ls();
 	void cd(std::string);
 	void cdBack();
 	void rm(std::string);
