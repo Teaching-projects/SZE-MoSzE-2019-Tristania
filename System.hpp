@@ -5,12 +5,19 @@
 #include <vector>
 #include <iostream>
 
+class NoDirectoryExc : public std::exception {
+    std::string what = "No directory found with the given name. Please try again with another name!\n";
+public:
+    std::string getWhat() { return what; };
+};
+
 class System {
 	std::vector<Dir*> directories;
     std::vector<File*> files;
 	Dir* currentFolder;
 public:
 	System();
+    ~System();
 	std::string getCurrent() const;
 	std::string getChild(std::string) const;
 
@@ -24,7 +31,7 @@ public:
 
 	void mkdir(std::string);
     void touch(std::string);
-	void ls();
+	void ls(std::string);
 	void cd(std::string);
 	void cdBack();
 	void rm(std::string);

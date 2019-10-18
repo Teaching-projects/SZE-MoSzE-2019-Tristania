@@ -12,7 +12,7 @@ jobs:
             - terminal
             - Tests/*
       - store_artifacts:
-          path: a.out
+          path: terminal
           destination: Binary file
   test:
     machine:
