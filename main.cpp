@@ -61,5 +61,11 @@ int main() {
 		else if (tokens[0] != "exit") {
 			cerr << "The command is not valid.\n";
 		}
+        
+        //reset cmd strings manually
+        //TODO: make automatically
+        tokens[0].clear();
+        tokens[1].clear();
+        tokens[2].clear();
 	} while (tokens[0] != "exit");
 }

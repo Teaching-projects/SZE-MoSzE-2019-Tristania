@@ -7,9 +7,10 @@
 
 class File{
     std::string name;
+    std::string content;
     Dir* parent;
 public:
-    File(std::string, Dir*);
+    File(std::string, Dir*, std::string content="");
     std::string getName();
     Dir* getParent();
 };

@@ -213,12 +213,14 @@ void System::rm(std::string dirname) {
         else {
             for (unsigned i = 0; i < directories.size();i++) {
                 if (directories[i]->getDirName() == workdir) {
+                    delete directories.at(i);
                     directories.erase(directories.begin() + i);
                 }
             }
             
             for (unsigned i = 0; i< files.size();i++) {
-                if (files[i]->getName() == dirname) {
+                if (files[i]->getName() == workdir) {
+                    delete files.at(i);
                     files.erase(files.begin() + i);
                 }
             }
