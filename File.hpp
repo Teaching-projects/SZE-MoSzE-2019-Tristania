@@ -15,10 +15,13 @@
 class File{
     std::string name;
     std::string parent;
+    std::string content;
 public:
-    File(std::string, std::string);
+    File(std::string, std::string,std::string="");
     std::string getName();
     std::string getParent();
+    std::string getContent();
+    void setContent(std::string);
 };
 
 #endif /* File_hpp */

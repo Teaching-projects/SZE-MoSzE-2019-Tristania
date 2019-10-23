@@ -9,9 +9,14 @@
 #include "File.hpp"
 
 
-File::File(std::string filename, std::string parent) : name(filename), parent(parent) {}
+File::File(std::string filename, std::string parent,std::string content) : name(filename), parent(parent) {}
 
 std::string File::getName() { return name; }
 
 std::string File::getParent() { return parent; }
 
+std::string File::getContent() {return content;}
+
+void File::setContent(std::string content){
+    this->content=content;
+}

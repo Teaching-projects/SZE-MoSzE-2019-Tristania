@@ -55,14 +55,21 @@ int main() {
 				}
 				else {
 					filesystem.rm(second);
-				}	
+				}
 			}
 		}
         else if(cmd=="touch") {
             string fname;
             cin>>fname;
-            
+
             filesystem.touch(fname);
+        }
+        else if(cmd=="echo"){
+            std::string fname;
+            std::string content;
+            cin>>fname;
+            cin>>content;
+            filesystem.echo(fname,content);
         }
 		else if (cmd != "exit") {
 			cerr << "The command is not valid.\n";

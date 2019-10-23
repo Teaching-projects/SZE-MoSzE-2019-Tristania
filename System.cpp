@@ -30,7 +30,7 @@ bool System::alreadyExists(std::string dirname) const {
             toReturn = true;
         }
     }
-    
+
 	return toReturn;
 }
 
@@ -107,4 +107,14 @@ void System::touch(std::string fname) {
     if (!alreadyExists(fname)) {
         files.push_back(new File(fname, currentFolder));
     } else std::cerr <<"This name already taken, please choose other."<<std::endl;
+}
+
+void System::echo(std::string fname, std::string content){
+    for(auto &f: files){
+        if(alreadyExists(fname)){
+            f->setContent(content);
+        }else{
+            files.push_back(new File(fname,currentFolder,content));
+        }
+    }
 }
