@@ -5,4 +5,4 @@ ls
 cd ..
 rm asd
 ls
-exit
+exitccitester

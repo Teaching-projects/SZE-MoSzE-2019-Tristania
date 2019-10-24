@@ -12,10 +12,18 @@ int main() {
 	string cmd;
     string tokens[3];
 	do {
+        //reset cmd strings manually
+        tokens[0].clear();
+        tokens[1].clear();
+        tokens[2].clear();
+        
 		filesystem.printCore();
         //cmd tokenize
         getline(cin, cmd);
-
+        if (cmd == "exitccitester") {
+            break;
+        }
+        
         stringstream ss(cmd);
         string token;
         int i = 0;
@@ -61,11 +69,5 @@ int main() {
 		else if (tokens[0] != "exit") {
 			cerr << "The command is not valid.\n";
 		}
-        
-        //reset cmd strings manually
-        //TODO: make automatically
-        tokens[0].clear();
-        tokens[1].clear();
-        tokens[2].clear();
 	} while (tokens[0] != "exit");
 }
