@@ -3,15 +3,11 @@
 
 #include <stdio.h>
 #include <string>
-#include "Dir.hpp"
+#include "Node.hpp"
 
-class File{
-    std::string name;
-    Dir* parent;
+class File : public Node{
 public:
-    File(std::string, Dir*);
-    std::string getName();
-    Dir* getParent();
+    File(std::string, Node*);
 };
 
 #endif /* File_hpp */

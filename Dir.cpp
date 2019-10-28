@@ -1,11 +1,19 @@
 #include "Dir.hpp"
 
-Dir::Dir(std::string name, Dir* parent) :name(name), parent(parent) {};
+Dir::Dir(std::string name, Dir* parent): Node(name, parent) {}
 
-std::string Dir::getDirName() const {
-	return name;
+
+void Dir::addChild(Node* param) {
+    children.push_back(param);
 }
 
-Dir* Dir::getParent() const {
-	return parent;
+void Dir::listChildren() {
+    for (auto &d : children) {
+        if (dynamic_cast<Dir*>(d)) {
+            std::cout << d->getName() << "/" << std::endl;
+        } else if (dynamic_cast<File*>(d)) {
+            std::cout << d->getName() << std::endl;
+        }
+    }
 }
+

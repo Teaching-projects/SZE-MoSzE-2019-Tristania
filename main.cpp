@@ -3,6 +3,9 @@
 #include "File.hpp"
 #include "System.hpp"
 #include <sstream>
+#include <nlohmann/json.hpp>
+
+using json = nlohmann::json;
 
 using namespace std;
 
