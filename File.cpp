@@ -9,7 +9,7 @@
 #include "File.hpp"
 
 
-File::File(std::string filename, std::string parent,std::string content) : name(filename), parent(parent) {}
+File::File(std::string filename, std::string parent,std::string content) : name(filename), parent(parent),content(content) {}
 
 std::string File::getName() { return name; }
 

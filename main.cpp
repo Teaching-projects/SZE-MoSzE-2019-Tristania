@@ -65,11 +65,11 @@ int main() {
             filesystem.touch(fname);
         }
         else if(cmd=="echo"){
-            std::string fname;
             std::string content;
-            cin>>fname;
+            std::string fname;
             cin>>content;
-            filesystem.echo(fname,content);
+            cin>>fname;
+            filesystem.echo(content,fname);
         }
 		else if (cmd != "exit") {
 			cerr << "The command is not valid.\n";
