@@ -11,6 +11,10 @@ private:
     std::vector<Node*> children;
 public:
     Dir(std::string, Dir*);
+    std::vector<Node*> getChildren();
+    Node* getChild();
+    void setChildren(std::vector<Node*>);
+    
     void addChild(Node*);
     void listChildren();
 };

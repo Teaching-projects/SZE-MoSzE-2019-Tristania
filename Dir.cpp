@@ -2,6 +2,15 @@
 
 Dir::Dir(std::string name, Dir* parent): Node(name, parent) {}
 
+std::vector<Node*> Dir::getChildren() { return children; }
+
+Node* Dir::getChild() {
+    return children.at(0);
+}
+
+void Dir::setChildren(std::vector<Node*> pchildren) {
+    children = pchildren;
+}
 
 void Dir::addChild(Node* param) {
     children.push_back(param);
