@@ -2,6 +2,7 @@
 #include "Dir.hpp"
 #include "File.hpp"
 #include "System.hpp"
+#include <sstream>
 
 using namespace std;
 
@@ -9,63 +10,64 @@ int main() {
 	System filesystem;
 
 	string cmd;
+    string tokens[3];
 	do {
+        //reset cmd strings manually
+        tokens[0].clear();
+        tokens[1].clear();
+        tokens[2].clear();
+        
 		filesystem.printCore();
-		cin >> cmd;
-		if (cmd == "mkdir") {
-			string dirname;
-			cin >> dirname;
-			if (!filesystem.alreadyExists(dirname)) {
-				filesystem.mkdir(dirname);
-			} else cerr <<"This directory name already taken. Please try again with another name!" << endl;
+        //cmd tokenize
+        getline(cin, cmd);
+        if (cmd == "exitccitester") {
+            break;
+        }
+        
+        stringstream ss(cmd);
+        string token;
+        int i = 0;
+        while (getline(ss, token, ' ')) {
+            tokens[i] = token;
+            i++;
+        }
+        
+		if (tokens[0] == "mkdir") {
+            filesystem.mkdir(tokens[1]);
+        }
+		else if (tokens[0] == "ls") {
+            if (tokens[1].empty()) {
+                filesystem.ls("");
+            } else {
+                filesystem.ls(tokens[1]);
+            }
+			
 		}
-		else if (cmd == "ls") {
-			filesystem.ls();
-		}
-		else if (cmd == "cd") {
-			string dirname;
-			cin >> dirname;
-			if (dirname == "..") {
+		else if (tokens[0] == "cd") {
+			if (tokens[1] == "..") {
 				filesystem.cdBack();
 			}
 			else {
-				if (!filesystem.alreadyExists(dirname)) {
-					cerr << "No directory found with the given name. Please try again with another name!\n";
-				}
-				else {
-					filesystem.cd(dirname);
-				}
+                try {
+                    filesystem.cd(tokens[1]);
+                } catch (NoDirectoryExc e) {
+                    cerr << e.getWhat();
+                }
 			}
 		}
-		else if(cmd=="rm"){
-			string second;
-			cin >> second;
+		else if(tokens[0]=="rm"){
+			if (tokens[1] == "-rf") {
 
-			if (second == "-rf") {
-				string dirname;
-				cin >> dirname;
-				if (!filesystem.alreadyExists(dirname)) {
-					cerr << "No directory found with the given name. Please try again with another name!\n";
-				}else {
-					filesystem.rmrf(dirname);
-				}
+                filesystem.rmrf(tokens[2]);
 			} else {
-				if (!filesystem.alreadyExists(second)) {
-					cerr << "No directory found with the given name. Please try again with another name!\n";
-				}
-				else {
-					filesystem.rm(second);
-				}	
+                filesystem.rm(tokens[1]);
 			}
 		}
-        else if(cmd=="touch") {
-            string fname;
-            cin>>fname;
-            
-            filesystem.touch(fname);
+        else if(tokens[0]=="touch") {
+            filesystem.touch(tokens[1]);
         }
-		else if (cmd != "exit") {
+		else if (tokens[0] != "exit") {
 			cerr << "The command is not valid.\n";
 		}
-	} while (cmd != "exit");
+	} while (tokens[0] != "exit");
 }

@@ -1,4 +1,4 @@
-OBJS=main.o File.o Dir.o System.o
+OBJS=main.o File.o Dir.o Node.o System.o
 CXXFLAGS = -g -std=c++11
 
 all: $(OBJS)
@@ -15,6 +15,9 @@ Dir.o: Dir.cpp
 
 System.o: System.cpp
 	g++ -c System.cpp $(CXXFLAGS)
+
+Node.o: Node.cpp
+	g++ -c Node.cpp $(CXXFLAGS)
 	
 clean:
 	rm -f *.o
