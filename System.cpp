@@ -115,7 +115,7 @@ void System::echo(std::string content, std::string fname){
     }
     else{
         for(auto &f: files){
-            if(f->getName()==fname){
+            if(f->getName()==fname && f->getParent()==currentFolder){
                 f->setContent(content);
             }
         }
