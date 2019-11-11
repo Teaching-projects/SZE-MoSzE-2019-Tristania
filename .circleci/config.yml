@@ -3,27 +3,25 @@ jobs:
   build:
     machine:
       image: ubuntu-1604:201903-01
-    working_directory: ~/SZE-MoSzE-2019-Tristania/Tests
     steps:
       - checkout
-      - run: 'make clean'
-    persist_to_workspace:
-      root: ~/project
-      paths:
-        - terminal
-        - Test/*
+      - run: 'make'
+      - persist_to_workspace:
+          root: ~/project
+          paths:
+            - terminal
+            - Tests/*
+      - store_artifacts:
+          path: terminal
+          destination: Binary file
   test:
     machine:
       image: ubuntu-1604:201903-01
-    attach_to_workspace:
-      at: ~/project
     steps:
-      - run: './terminal < Tests/test.txt > Test/out.txt'
+      - attach_workspace:
+          at: ~/project
+      - run: './terminal < Tests/test.txt > Tests/out.txt'
       - run: 'diff Tests/out.txt Tests/testresult.txt'
-
-      - store_artifacts:
-          path: a.out
-          destination: Binary file
 workflows:
   version: 2
   build_and_test:

@@ -1,2 +1,2 @@
-gabor-mbp:/ gabor$ gabor-mbp:/ gabor$ asd
-gabor-mbp:/ gabor$ gabor-mbp:asd gabor$ gabor-mbp:asd gabor$ gabor-mbp:/ gabor$ gabor-mbp:/ gabor$ gabor-mbp:/ gabor$ 
+gabor-mbp:root gabor$ gabor-mbp:root gabor$ asd/
+gabor-mbp:root gabor$ gabor-mbp:asd gabor$ gabor-mbp:asd gabor$ gabor-mbp:root gabor$ gabor-mbp:root gabor$ gabor-mbp:root gabor$ 

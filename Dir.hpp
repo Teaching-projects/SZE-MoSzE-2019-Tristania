@@ -1,13 +1,20 @@
 #pragma	once
 
+#include "Node.hpp"
+#include "File.hpp"
 #include <string>
 #include <iostream>
+#include <vector>
 
-class Dir {
-	std::string name;
-	std::string parent;
+class Dir : public Node{
+private:
+    std::vector<Node*> children;
 public:
-	Dir(std::string, std::string);
-	std::string getDirName() const;
-	std::string getParent() const;
+    Dir(std::string, Dir*);
+    std::vector<Node*> getChildren();
+    Node* getChild();
+    void setChildren(std::vector<Node*>);
+    
+    void addChild(Node*);
+    void listChildren();
 };

@@ -1,23 +1,17 @@
-//
-//  File.hpp
-//  Terminal
-//
-//  Created by Gábor Horváth on 2019. 10. 05..
-//  Copyright © 2019. Gábor Horváth. All rights reserved.
-//
-
 #ifndef File_hpp
 #define File_hpp
 
 #include <stdio.h>
 #include <string>
+#include "Node.hpp"
+#include "Dir.hpp"
 
-class File{
+class File : public Node {
     std::string name;
-    std::string parent;
+    Dir* parent;
     std::string content;
 public:
-    File(std::string, std::string,std::string="");
+    File(std::string, Dir*,std::string="");
     std::string getName();
     std::string getParent();
     std::string getContent();
