@@ -13,7 +13,7 @@ class File : public Node {
 public:
     File(std::string, Dir*,std::string="");
     std::string getName();
-    std::string getParent();
+    Dir* getParent();
     std::string getContent();
     void setContent(std::string);
 };

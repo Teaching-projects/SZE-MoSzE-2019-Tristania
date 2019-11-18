@@ -1,6 +1,6 @@
 #include "File.hpp"
 
-File::File(std::string filename, Dir* parent,std::string content) : name(filename), parent(parent),content(content) {}
+File::File(std::string filename, Dir* parent,std::string content) : Node(filename, parent), content(content) {}
 
 std::string File::getName() { return name; }
 

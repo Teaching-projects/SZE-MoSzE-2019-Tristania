@@ -261,12 +261,12 @@ void System::touch(std::string fname) {
 }
 void System::echo(std::string content, std::string fname){
     if(!alreadyExists(fname)){
-        currentFolder->addChild(new File(fname,currentFolder,content))
+        currentFolder->addChild(new File(fname,currentFolder,content));
     }
     else{
-        for(auto &f: currentFolder->getChildren){
-            if(Dynamic_cast<File*>(f) != nullptr && f->getName()==fname && f->getParent()==currentFolder){
-                f->setContent(content);
+        for(auto &f: currentFolder->getChildren()){
+            if(dynamic_cast<File*>(f) != nullptr && f->getName()==fname && f->getParent() == currentFolder){
+                dynamic_cast<File*>(f)->setContent(content);
             }
         }
     }
