@@ -44,4 +44,5 @@ public:
 	void cdBack();
 	void rm(std::string);
 	void rmrf(std::string);
+	void echo(std::string, std::string);
 };

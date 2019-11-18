@@ -66,8 +66,12 @@ int main() {
         else if(tokens[0]=="touch") {
             filesystem.touch(tokens[1]);
         }
-		else if (tokens[0] != "exit") {
+        else if(tokens[0]=="echo") {
+            filesystem.echo(tokens[1],tokens[2]);
+        }
+        else if(tokens[0] != "exit") {
 			cerr << "The command is not valid.\n";
 		}
-	} while (tokens[0] != "exit");
+	} while(tokens[0] != "exit");
 }
+

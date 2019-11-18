@@ -8,7 +8,6 @@
 
 #include "Node.hpp"
 
-
 Node::Node(std::string name, Node *parent): name(name), parent(parent) {}
 
 Node *Node::getParent() const {

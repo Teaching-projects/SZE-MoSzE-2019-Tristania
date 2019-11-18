@@ -259,3 +259,15 @@ void System::touch(std::string fname) {
         } else std::cerr << "This file name is already taken. Please try again with another name!" <<std::endl;
     }
 }
+void System::echo(std::string content, std::string fname){
+    if(!alreadyExists(fname)){
+        currentFolder->addChild(new File(fname,currentFolder,content));
+    }
+    else{
+        for(auto &f: currentFolder->getChildren()){
+            if(dynamic_cast<File*>(f) != nullptr && f->getName()==fname && f->getParent() == currentFolder){
+                dynamic_cast<File*>(f)->setContent(content);
+            }
+        }
+    }
+}

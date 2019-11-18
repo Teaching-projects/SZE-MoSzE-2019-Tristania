@@ -1,4 +1,5 @@
 #include "Dir.hpp"
+#include "File.hpp"
 
 Dir::Dir(std::string name, Dir* parent): Node(name, parent) {}
 
