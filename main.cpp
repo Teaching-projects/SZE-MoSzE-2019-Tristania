@@ -71,6 +71,7 @@ int main() {
         }
 		else if (tokens[0] == "mv") {
 			filesystem.mv(tokens[1], tokens[2]);
+		}
         else if(tokens[0] != "exit") {
 			cerr << "The command is not valid.\n";
 		}
