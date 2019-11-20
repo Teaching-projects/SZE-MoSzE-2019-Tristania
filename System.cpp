@@ -271,3 +271,30 @@ void System::echo(std::string content, std::string fname){
         }
     }
 }
+
+void System::mv(std::string name, std::string dest) {
+	if (alreadyExists(name)) {
+		Node* toMove = stringToNode(name);
+		if (alreadyExists(dest)) {
+			Node* destination = stringToNode(dest);
+			if (dynamic_cast<Dir*>(destination) != nullptr) {
+				if (dynamic_cast<Dir*>(toMove) != nullptr && !(dynamic_cast<Dir*>(toMove)->getChildren().empty())) {
+					rmrf(name);
+				}
+				else {
+					rm(name);
+				}
+				dynamic_cast<Dir*>(destination)->addChild(toMove);
+			}
+			else {
+				std::cerr << "File as a destination not accepted!" << std::endl;
+			}
+		}
+		else {
+			std::cerr << "No destination directory found with the given name. Please try again with another name!" << std::endl;
+		}
+	}
+	else {
+		std::cerr << "No directory or file found with the given name. Please try again with another name!" << std::endl;
+	}
+}

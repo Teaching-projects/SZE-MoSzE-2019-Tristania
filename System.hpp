@@ -45,4 +45,5 @@ public:
 	void rm(std::string);
 	void rmrf(std::string);
 	void echo(std::string, std::string);
+	void mv(std::string, std::string);
 };
