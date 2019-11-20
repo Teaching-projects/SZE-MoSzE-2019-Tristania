@@ -259,15 +259,42 @@ void System::touch(std::string fname) {
         } else std::cerr << "This file name is already taken. Please try again with another name!" <<std::endl;
     }
 }
-void System::echo(std::string content, std::string fname){
-    if(!alreadyExists(fname)){
-        currentFolder->addChild(new File(fname,currentFolder,content));
-    }
-    else{
-        for(auto &f: currentFolder->getChildren()){
-            if(dynamic_cast<File*>(f) != nullptr && f->getName()==fname && f->getParent() == currentFolder){
-                dynamic_cast<File*>(f)->setContent(content);
-            }
-        }
-    }
+
+void System::echo(std::string content, std::string fname) {
+	if (fname.find("/") != std::string::npos) {
+		Dir* current = currentFolder;
+		std::string working;
+
+		try {
+			working = goToFolder(fname);
+		}
+		catch (NoDirectoryExc e) {
+			std::cerr << e.getWhat() << std::endl;
+		}
+
+		if (!working.empty() && !alreadyExists(working)) {
+			currentFolder->addChild(new File(working, currentFolder, content));
+		}
+		else if (!working.empty() && alreadyExists(working)) {
+			dynamic_cast<File*>(stringToNode(working))->setContent(content);
+		}
+		else std::cerr << "You need to enter a filename after the content!" << std::endl;
+		currentFolder = current;
+
+	}
+	else {
+		if (!fname.empty()) {
+			if (!alreadyExists(fname)) {
+				currentFolder->addChild(new File(fname, currentFolder, content));
+			}
+			else {
+				for (auto &f : currentFolder->getChildren()) {
+					if (dynamic_cast<File*>(f) != nullptr && f->getName() == fname && f->getParent() == currentFolder) {
+						dynamic_cast<File*>(f)->setContent(content);
+					}
+				}
+			}
+		}
+		else std::cerr << "You need to enter a filename after the content!" << std::endl;
+	}
 }
