@@ -72,7 +72,7 @@ jobs:
     steps:
       - attach_workspace:
           at: ~/project
-      - run: './tetouchinal < Tests/touch\ test/test.txt > Tests/touch\ test/out.txt'
+      - run: './terminal < Tests/touch\ test/test.txt > Tests/touch\ test/out.txt'
       - run: 'diff Tests/touch\ test/out.txt Tests/touch\ test/result.txt'
 
 workflows:
