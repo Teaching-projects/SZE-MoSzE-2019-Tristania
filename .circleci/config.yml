@@ -80,7 +80,7 @@ workflows:
   Basics:
     jobs:
       - github_pull
-      - build_binary
+      - build_binary:
           requires:
             - github_pull
       - cd_test:
