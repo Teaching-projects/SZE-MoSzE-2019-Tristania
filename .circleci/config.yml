@@ -82,7 +82,7 @@ workflows:
       - github_pull
       - build_binary
           requires:
-            - githubPull
+            - github_pull
       - cd_test:
           requires:
             - mkdir_test
@@ -95,11 +95,11 @@ workflows:
             - touch_test
       - mkdir_test:
           requires:
-            - build
+            - build_binary
       - rm_test:
           requires:
             - mkdir_test
             - touch_test
       - touch_test:
           requires:
-            - build
+            - build_binary
