@@ -1,0 +1,9 @@
+mkdir asd
+mkdir asd/123
+cd asd/123
+mkdir ../432
+cd ..
+ls
+cd ..
+ls
+exitccitester

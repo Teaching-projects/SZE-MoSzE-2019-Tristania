@@ -1,0 +1,4 @@
+touch asd
+touch file
+ls
+exitccitester

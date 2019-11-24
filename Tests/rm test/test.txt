@@ -1,0 +1,9 @@
+mkdir asd
+touch 123
+ls
+mkdir asd/321
+touch asd/321/file
+rm 123
+rm -rf asd
+ls
+exitccitester

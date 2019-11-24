@@ -1,0 +1,10 @@
+mkdir asd
+cd asd
+cd ..
+mkdir asd/123
+cd asd/123
+cd ..
+mkdir 456
+cd 123
+cd ../456
+exitccitester

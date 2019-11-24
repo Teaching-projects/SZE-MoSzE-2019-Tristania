@@ -1,6 +1,12 @@
 version: 2
 jobs:
-  build:
+  github_pull:
+    machine:
+      image: ubuntu-1604:201903-01
+    steps:
+      - checkout
+
+  build_binary:
     machine:
       image: ubuntu-1604:201903-01
     steps:
@@ -12,21 +18,88 @@ jobs:
             - terminal
             - Tests/*
       - store_artifacts:
-          path: terminal
+          path: ~/project/terminal
           destination: Binary file
-  test:
+
+  cd_test:
     machine:
       image: ubuntu-1604:201903-01
     steps:
       - attach_workspace:
           at: ~/project
-      - run: './terminal < Tests/test.txt > Tests/out.txt'
-      - run: 'diff Tests/out.txt Tests/testresult.txt'
+      - run: './terminal < Tests/cd\ test/test.txt > Tests/cd\ test/out.txt'
+      - run: 'diff Tests/cd\ test/out.txt Tests/cd\ test/result.txt'
+      
+  echo_test:
+    machine:
+      image: ubuntu-1604:201903-01
+    steps:
+      - attach_workspace:
+          at: ~/project
+      - run: './terminal < Tests/echo\ test/test.txt > Tests/echo\ test/out.txt'
+      - run: 'diff Tests/echo\ test/out.txt Tests/echo\ test/result.txt'
+
+  ls_test:
+    machine:
+      image: ubuntu-1604:201903-01
+    steps:
+      - attach_workspace:
+          at: ~/project
+      - run: './terminal < Tests/ls\ test/test.txt > Tests/ls\ test/out.txt'
+      - run: 'diff Tests/ls\ test/out.txt Tests/ls\ test/result.txt'
+
+  mkdir_test:
+    machine:
+      image: ubuntu-1604:201903-01
+    steps:
+      - attach_workspace:
+          at: ~/project
+      - run: './terminal < Tests/mkdir\ test/test.txt > Tests/mkdir\ test/out.txt'
+      - run: 'diff Tests/mkdir\ test/out.txt Tests/mkdir\ test/result.txt'
+
+  rm_test:
+    machine:
+      image: ubuntu-1604:201903-01
+    steps:
+      - attach_workspace:
+          at: ~/project
+      - run: './terminal < Tests/rm\ test/test.txt > Tests/rm\ test/out.txt'
+      - run: 'diff Tests/rm\ test/out.txt Tests/rm\ test/result.txt'
+
+  touch_test:
+    machine:
+      image: ubuntu-1604:201903-01
+    steps:
+      - attach_workspace:
+          at: ~/project
+      - run: './tetouchinal < Tests/touch\ test/test.txt > Tests/touch\ test/out.txt'
+      - run: 'diff Tests/touch\ test/out.txt Tests/touch\ test/result.txt'
+
 workflows:
   version: 2
-  build_and_test:
+  Basics:
     jobs:
-      - build
-      - test:
+      - github_pull
+      - build_binary
+          requires:
+            - githubPull
+      - cd_test:
+          requires:
+            - mkdir_test
+      - echo_test:
+          requires:
+            - touch_test
+      - ls_test:
+          requires:
+            - mkdir_test
+            - touch_test
+      - mkdir_test:
+          requires:
+            - build
+      - rm_test:
+          requires:
+            - mkdir_test
+            - touch_test
+      - touch_test:
           requires:
             - build

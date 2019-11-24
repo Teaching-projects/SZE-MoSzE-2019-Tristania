@@ -1,8 +1,0 @@
-mkdir asd
-ls
-cd asd
-ls
-cd ..
-rm asd
-ls
-exitccitester
