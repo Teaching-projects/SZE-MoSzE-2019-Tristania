@@ -5,18 +5,27 @@ jobs:
       image: ubuntu-1604:201903-01
     steps:
       - checkout
+      - persist_to_workspace:
+          root: ~/
+          paths:
+            - project/*.cpp
+            - project/*.hpp
+            - project/Makefile
+            - project/Tests
+            - project/Doxygen/Doxyfile
 
   build_binary:
     machine:
       image: ubuntu-1604:201903-01
     steps:
-      - checkout
-      - run: 'make'
+      - attach_workspace:
+          at: ~/
+      - run: cd ~/project
+      - run: make
       - persist_to_workspace:
-          root: ~/project
+          root: ~/
           paths:
-            - terminal
-            - Tests/*
+            - project/terminal
       - store_artifacts:
           path: ~/project/terminal
           destination: Binary file
@@ -26,7 +35,8 @@ jobs:
       image: ubuntu-1604:201903-01
     steps:
       - attach_workspace:
-          at: ~/project
+          at: ~/
+      - run: cd ~/project
       - run: './terminal < Tests/cd\ test/test.txt > Tests/cd\ test/out.txt'
       - run: 'diff Tests/cd\ test/out.txt Tests/cd\ test/result.txt'
       
@@ -35,7 +45,8 @@ jobs:
       image: ubuntu-1604:201903-01
     steps:
       - attach_workspace:
-          at: ~/project
+          at: ~/
+      - run: cd ~/project
       - run: './terminal < Tests/echo\ test/test.txt > Tests/echo\ test/out.txt'
       - run: 'diff Tests/echo\ test/out.txt Tests/echo\ test/result.txt'
 
@@ -44,7 +55,8 @@ jobs:
       image: ubuntu-1604:201903-01
     steps:
       - attach_workspace:
-          at: ~/project
+          at: ~/
+      - run: cd ~/project
       - run: './terminal < Tests/ls\ test/test.txt > Tests/ls\ test/out.txt'
       - run: 'diff Tests/ls\ test/out.txt Tests/ls\ test/result.txt'
 
@@ -53,7 +65,8 @@ jobs:
       image: ubuntu-1604:201903-01
     steps:
       - attach_workspace:
-          at: ~/project
+          at: ~/
+      - run: cd ~/project
       - run: './terminal < Tests/mkdir\ test/test.txt > Tests/mkdir\ test/out.txt'
       - run: 'diff Tests/mkdir\ test/out.txt Tests/mkdir\ test/result.txt'
 
@@ -62,7 +75,8 @@ jobs:
       image: ubuntu-1604:201903-01
     steps:
       - attach_workspace:
-          at: ~/project
+          at: ~/
+      - run: cd ~/project
       - run: './terminal < Tests/rm\ test/test.txt > Tests/rm\ test/out.txt'
       - run: 'diff Tests/rm\ test/out.txt Tests/rm\ test/result.txt'
 
@@ -71,9 +85,39 @@ jobs:
       image: ubuntu-1604:201903-01
     steps:
       - attach_workspace:
-          at: ~/project
+          at: ~/
+      - run: cd ~/project
       - run: './terminal < Tests/touch\ test/test.txt > Tests/touch\ test/out.txt'
       - run: 'diff Tests/touch\ test/out.txt Tests/touch\ test/result.txt'
+
+  Doxygen_build:
+    machine:
+      image: ubuntu-1604:201903-01
+    steps:
+      - attach_workspace:
+          at: ~/
+      - run: 'sudo apt-get install doxygen'
+      - run: 'sudo apt-get install graphviz'
+      - run: 'doxygen ~/project/Doxygen/Doxyfile'
+      - persist_to_workspace:
+          root: ~/project/Doxygen/HTML
+          path: 
+            - html
+  
+  Doxygen_deploy:
+    docker:
+      - image: node:8.10.0
+    steps:
+      - attach_workspace:
+          at: project/Doxygen/HTML
+      - run: | 
+          npm install -g --silent gh-pages@2.0.1
+          git config user.email "gaborka812@gmail.com"
+          git config user.name "gaborka98"
+      - add_ssh_keys:
+          fingerprints:
+            - "6f:7e:f9:83:73:2c:56:e4:f8:09:a5:55:7f:72:a4:10"
+      - run: gh-pages --dotfiles --messages "[skip ci] updates" --dist project/Doxygen/HTML/html
 
 workflows:
   version: 2
@@ -103,3 +147,18 @@ workflows:
       - touch_test:
           requires:
             - build_binary
+      - Doxygen_build:
+          requires:
+            - cd_test
+            - echo_test
+            - ls_test
+            - mkdir_test
+            - rm_test
+            - touch_test
+      - Doxygen_deploy:
+          requires:
+            - Doxygen_build
+          filters:
+            branches:
+              only: master
+          
