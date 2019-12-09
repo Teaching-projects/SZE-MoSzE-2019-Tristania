@@ -12,104 +12,107 @@ jobs:
             - project/*.hpp
             - project/Makefile
             - project/Tests
-            - project/Doxygen/Doxyfile
+            - project/Doxyfile
 
   build_binary:
-    machine:
-      image: ubuntu-1604:201903-01
+    docker:
+      - image: gaborka98/tristania-build:latest
     steps:
       - attach_workspace:
-          at: ~/
-      - run: cd ~/project
+          at: /
+      - run: cd /project
       - run: make
       - persist_to_workspace:
-          root: ~/
+          root: /
           paths:
             - project/terminal
       - store_artifacts:
-          path: ~/project/terminal
-          destination: Binary file
+          path: /project/terminal
+          destination: Terminal.out
 
   cd_test:
-    machine:
-      image: ubuntu-1604:201903-01
+    docker:
+      - image: gaborka98/tristania-tests:latest
     steps:
       - attach_workspace:
-          at: ~/
-      - run: cd ~/project
+          at: /
+      - run: cd /project
       - run: './terminal < Tests/cd\ test/test.txt > Tests/cd\ test/out.txt'
       - run: 'diff Tests/cd\ test/out.txt Tests/cd\ test/result.txt'
       
   echo_test:
-    machine:
-      image: ubuntu-1604:201903-01
+    docker:
+      - image: gaborka98/tristania-tests:latest
     steps:
       - attach_workspace:
-          at: ~/
-      - run: cd ~/project
+          at: /
+      - run: cd /project
       - run: './terminal < Tests/echo\ test/test.txt > Tests/echo\ test/out.txt'
       - run: 'diff Tests/echo\ test/out.txt Tests/echo\ test/result.txt'
 
   ls_test:
-    machine:
-      image: ubuntu-1604:201903-01
+    docker:
+      - image: gaborka98/tristania-tests:latest
     steps:
       - attach_workspace:
-          at: ~/
-      - run: cd ~/project
+          at: /
+      - run: cd /project
       - run: './terminal < Tests/ls\ test/test.txt > Tests/ls\ test/out.txt'
       - run: 'diff Tests/ls\ test/out.txt Tests/ls\ test/result.txt'
 
   mkdir_test:
-    machine:
-      image: ubuntu-1604:201903-01
+    docker:
+      - image: gaborka98/tristania-tests:latest
     steps:
       - attach_workspace:
-          at: ~/
-      - run: cd ~/project
+          at: /
+      - run: cd /project
       - run: './terminal < Tests/mkdir\ test/test.txt > Tests/mkdir\ test/out.txt'
       - run: 'diff Tests/mkdir\ test/out.txt Tests/mkdir\ test/result.txt'
 
   rm_test:
-    machine:
-      image: ubuntu-1604:201903-01
+    docker:
+      - image: gaborka98/tristania-tests:latest
     steps:
       - attach_workspace:
-          at: ~/
-      - run: cd ~/project
+          at: /
+      - run: cd /project
       - run: './terminal < Tests/rm\ test/test.txt > Tests/rm\ test/out.txt'
       - run: 'diff Tests/rm\ test/out.txt Tests/rm\ test/result.txt'
 
   touch_test:
-    machine:
-      image: ubuntu-1604:201903-01
+    docker:
+      - image: gaborka98/tristania-tests:latest
     steps:
       - attach_workspace:
-          at: ~/
-      - run: cd ~/project
+          at: /
+      - run: cd /project
       - run: './terminal < Tests/touch\ test/test.txt > Tests/touch\ test/out.txt'
       - run: 'diff Tests/touch\ test/out.txt Tests/touch\ test/result.txt'
 
   Doxygen_build:
-    machine:
-      image: ubuntu-1604:201903-01
+    docker:
+      - image: gaborka98/tristania-doxygen:latest
     steps:
       - attach_workspace:
-          at: ~/
-      - run: 'sudo apt-get install doxygen'
-      - run: 'sudo apt-get install graphviz'
-      - run: 'doxygen ~/project/Doxygen/Doxyfile'
+          at: /
+      - run: 'cd /project'
+      - run: 'doxygen -g Doxyfile'
+      - run: 'doxygen Doxyfile'
       - persist_to_workspace:
-          root: ~/project/Doxygen/HTML
-          path: 
+          root: /project
+          paths: 
             - html
+      - store_artifacts:
+          path: /project/html
+          destination: documentation.zip
   
   Doxygen_deploy:
     docker:
       - image: node:8.10.0
     steps:
       - attach_workspace:
-          at: project/Doxygen/HTML
+          at: /
       - run: | 
           npm install -g --silent gh-pages@2.0.1
           git config user.email "gaborka812@gmail.com"
@@ -117,7 +120,7 @@ jobs:
       - add_ssh_keys:
           fingerprints:
             - "6f:7e:f9:83:73:2c:56:e4:f8:09:a5:55:7f:72:a4:10"
-      - run: gh-pages --dotfiles --messages "[skip ci] updates" --dist project/Doxygen/HTML/html
+      - run: gh-pages --dotfiles --messages "[skip ci] updates" --dist /html
 
 workflows:
   version: 2
@@ -161,4 +164,3 @@ workflows:
           filters:
             branches:
               only: master
-          
