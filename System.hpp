@@ -31,7 +31,7 @@ public:
 
 	void printCore() const;
 
-	bool alreadyExists(std::string) const;
+	bool alreadyExists(std::string);
 	bool hasChildren(Dir*) const;
     
     void goToRoot();
