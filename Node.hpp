@@ -12,15 +12,30 @@
 #include <stdio.h>
 #include <string>
 
-
+/**
+ * Szülő class a fajlok és mappák kezeléséhez
+*/
 class Node {
 private:
     std::string name;
     Node* parent;
 public:
-    Node(std::string, Node*);
+    /**
+     * @param name beállítja a node nevét
+     * @param parent beállítja a node szülő mappáját.
+    */
+    Node(std::string name, Node* parent);
+    /**
+     * Getter függvény a szülő mappa mutatója számára.
+    */
     Node* getParent() const;
+    /**
+     * Getter függvény a Node nevéhez.
+    */
     std::string getName() const;
+    /**
+     * Csak a polifmorfizmus miatt kell.
+    */
     virtual ~Node() = default; //csak a polimorfizmus végett
     
 };

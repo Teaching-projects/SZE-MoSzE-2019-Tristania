@@ -6,7 +6,11 @@ Dir::Dir(std::string name, Dir* parent): Node(name, parent) {}
 std::vector<Node*> Dir::getChildren() { return children; }
 
 Node* Dir::getChild() {
-    return children.at(0);
+    if (!children.empty())
+    {
+        return children.at(0);
+    }
+    return nullptr;
 }
 
 void Dir::setChildren(std::vector<Node*> pchildren) {
@@ -27,3 +31,6 @@ void Dir::listChildren() {
     }
 }
 
+bool Dir::hasChildren() {
+    return children.empty();
+}
