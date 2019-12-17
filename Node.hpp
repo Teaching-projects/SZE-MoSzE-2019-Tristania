@@ -13,7 +13,7 @@
 #include <string>
 
 /**
- * Szülő class a fajlok és mappák kezeléséhez
+ * Parent class for handling files and folders
 */
 class Node {
 private:
@@ -21,22 +21,22 @@ private:
     Node* parent;
 public:
     /**
-     * @param name beállítja a node nevét
-     * @param parent beállítja a node szülő mappáját.
+     * @param name sets the node's name
+     * @param parent sets the node's parent folder
     */
     Node(std::string name, Node* parent);
     /**
-     * Getter függvény a szülő mappa mutatója számára.
+     * Get function for the parent folder's pointer
     */
     Node* getParent() const;
     /**
-     * Getter függvény a Node nevéhez.
+     * Get function for the Node name
     */
     std::string getName() const;
     /**
-     * Csak a polifmorfizmus miatt kell.
+     * Only needed for polymorphism
     */
-    virtual ~Node() = default; //csak a polimorfizmus végett
+    virtual ~Node() = default;
     
 };
 

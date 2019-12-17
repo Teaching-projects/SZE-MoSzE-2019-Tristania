@@ -7,8 +7,8 @@
 #include "Dir.hpp"
 
 /**
- * @brief Class a fájlok leírásához
- * @details ez a class arra való, hogy fájlokat is képesek legyünk tárolni.
+ * @brief Class for describing files.
+ * @details this class is used to store files.
 */
 class File : public Node {
     std::string name;
@@ -16,28 +16,28 @@ class File : public Node {
     std::string content;
 public:
     /**
-     * @brief Konstruktor a fájl classhoz.
+     * @brief Constructor for the File class.
      * 
-     * @param name a fájl neve
-     * @param parent a fájlt tartalmazo mappa mutatója
-     * @param content a fájl tartlma
+     * @param name file's name.
+     * @param parent pointer of the folder that contains the file.
+     * @param content content of the file.
     */
     File(std::string name, Dir* parent, std::string content="");
     /**
-     * Getter függvény a fájl nevéhez.
+     * Get function for the file's name.
     */
     std::string getName();
     /**
-     * Getter függvény a fájl szűlőmappájának mutatójához.
+     * Get function for the pointer of the file's parent.
     */
     Dir* getParent();
     /**
-     * Getter függvény a fájl tartalmának eléréséhez.
+     * Get function for the file's content.
     */
     std::string getContent();
     /**
-     * Setter, ami beállítja a fájl tartalmát.
-     * @param content A kapott stringet állítja be a fájl tartalmának.
+     * Set function that sets the file's content.
+     * @param content Sets the given string as the file's content.
     */
     void setContent(std::string content);
 };

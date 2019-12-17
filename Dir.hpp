@@ -4,56 +4,56 @@
 #include <string>
 #include <iostream>
 #include <vector>
-/** @brief Class a mappák leírásához */
+/** @brief Class for describing folders. */
 class Dir : public Node{
 private:
     /**
-     * Ez tárolja a mappában lévő többi elemet
+     * This stores the other elements in the folder.
     */
     std::vector<Node*> children;
 public:
     /**
-     * @param name  Beállítja a mappa nevét.
-     * @param parent Beállítja a mappa szülőjét.
+     * @param name Sets the folder's name.
+     * @param parent Sets the folder's parent.
     */
     Dir(std::string name, Dir* parent);
     /**
-     * @brief Getter függvény a mappa tartalmának lekéréséhez.
+     * @brief Get function for the folder's content.
      * 
-     * @return Vector ami tartalmazza a gyerekeket.
+     * @return Vector that contains the children.
     */
     std::vector<Node*> getChildren();
     /**
-     * @brief Vissza ad egy gyereket a children vectorból.
+     * @brief Returns a child from the children vector.
      * 
-     * @return Node* - Első elemet adja vissza a children vectorból.
-     * @return Nullptr - Ha üres a children vector.
+     * @return Node* - Return the first element of the children vector.
+     * @return Nullptr - If the children vector is empty.
     */
     Node* getChild();
 
     /**
-     * @brief Setter függvény a children vectorhoz
+     * @brief Set function for the children vector.
      * 
-     * @param vector kapott vectort beállítja a class children vectorjának.
+     * @param vector Sets the given vector to the children vector of the class.
     */
     void setChildren(std::vector<Node*> vector);
     
     /**
-     * @brief Egy Node pointer hozzáadása a children vectorhoz.
+     * @brief Giving a Node pointer to the children vector.
      * 
-     * @param child Ezt a paramétert adja hozzá a mappa children vectorjához.
+     * @param child Gives this parameter to the children vector of the folder.
     */
     void addChild(Node* child);
     /**
-     *  Az összes elem listázása std::cout-ra ami a children vectorban található.
+     * Listing every element of the children vector on std::cout.
     */
     void listChildren();
 
     /**
-     * @brief Azt vizsgálja, hogy az adott mappának van-e gyereke.
+     * @brief Tests if the given folder has a children.
      * 
-     * @return true - ha a children vectorban van legalább 1 elem.
-     * @return false - ha a children vector üres.
+     * @return true - if the children vector contains at least 1 element.
+     * @return false - if the children vector is empty.
     */
     bool hasChildren();
 };
