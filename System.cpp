@@ -9,17 +9,31 @@ System::~System(){
 
 }
 
-Node* System::getChild(Dir* dir) const {
-    if (!dir->getChildren().empty()) {
-        return dir->getChildren().at(0);
-    }
-    return nullptr;
-}
-
 Node* System::stringToNode(std::string name) {
-    for (auto &n : currentFolder->getChildren()) {
-        if (n->getName() == name) {
-            return n;
+    if (name.find("/") != std::string::npos) {
+        Dir* current = currentFolder;
+        std::string work;
+
+        try
+        {
+            work = goToFolder(name);
+        }
+        catch(NoDirectoryExc e) 
+        {
+            std::cerr << e.getWhat() << '\n';
+        }
+        for (auto &n : currentFolder->getChildren()) {
+            if (n->getName() == work) {
+                currentFolder = current;
+                return n;
+            }
+        }
+        
+    } else {
+        for (auto &n : currentFolder->getChildren()) {
+            if (n->getName() == name) {
+                return n;
+            }
         }
     }
     return nullptr;
@@ -29,18 +43,31 @@ void System::printCore() const {
 	std::cout << "gabor-mbp:" << currentFolder->getName() << " gabor$ ";
 }
 
-bool System::alreadyExists(std::string name) const {
-    for (auto &d : currentFolder->getChildren()) {
-        if (d->getName() == name) {
-            return true;
+bool System::alreadyExists(std::string name) {
+    if(name.find("/") != std::string::npos){
+        Dir* current = currentFolder;
+        std::string work;
+        try
+        {
+            work = goToFolder(name);
         }
-    }
-    return false;
-}
-
-bool System::hasChildren(Dir* dir) const {
-    if (!dir->getChildren().empty()) {
-        return true;
+        catch(NoDirectoryExc e)
+        {
+            std::cerr << e.getWhat() << '\n';
+        }
+        
+        for (auto &d : currentFolder->getChildren()) {
+            if (d->getName() == work) {
+                currentFolder = current;
+                return true;
+            }
+        }
+    } else {
+        for (auto &d : currentFolder->getChildren()) {
+            if (d->getName() == name) {
+                return true;
+            }
+        }
     }
     return false;
 }
@@ -163,7 +190,7 @@ void System::rm(std::string dirname) {
         
         
         if (Dir* workingDir = dynamic_cast<Dir*>(stringToNode(workdir))) {
-            if (hasChildren(workingDir)) {
+            if (workingDir->hasChildren()) {
                 std::cerr << "This directory cannot be removed as it contains other directories/ files!\n";
             }
         }
@@ -182,7 +209,7 @@ void System::rm(std::string dirname) {
     }
     else {
         if (Dir* work = dynamic_cast<Dir*>(stringToNode(dirname))) {
-            if (hasChildren(work)) std::cerr << "This directory cannot be removed as it contains other directories/ files!\n";
+            if (work->hasChildren()) std::cerr << "This directory cannot be removed as it contains other directories/ files!\n";
         }
 
         if (!alreadyExists(dirname)) {
@@ -211,7 +238,7 @@ void System::rmrf(std::string dirname) {
         }
         
         if (Dir* work = dynamic_cast<Dir*>(stringToNode(working))) {
-            while (hasChildren(work)) {
+            while (work->hasChildren()) {
                 cd(working);
                 rmrf(currentFolder->getChild()->getName());
                 cdBack();
@@ -225,7 +252,7 @@ void System::rmrf(std::string dirname) {
         currentFolder = current;
     } else {
         if (Dir* work = dynamic_cast<Dir*>(stringToNode(dirname))) {
-            while (hasChildren(work)) {
+            while (work->hasChildren()) {
                 cd(dirname);
                 rmrf(work->getChild()->getName());
                 cdBack();
@@ -296,5 +323,47 @@ void System::echo(std::string content, std::string fname) {
 			}
 		}
 		else std::cerr << "You need to enter a filename after the content!" << std::endl;
+	}
+}
+
+void System::mv(std::string name, std::string dest) {
+	if (alreadyExists(name)) {
+		Node* toMove = stringToNode(name);
+		if (alreadyExists(dest)) {
+			Node* destination = stringToNode(dest);
+			if (dynamic_cast<Dir*>(destination) != nullptr) {
+                //TODO: absolut path esetén nme törli ki!!!
+                Dir* current = currentFolder;
+                std::string working;
+                
+                try {
+                    working = goToFolder(name);
+                } catch (NoDirectoryExc e) {
+                    std::cerr << e.getWhat() << std::endl;
+                }
+                
+                std::vector<Node*>tmp  = currentFolder->getChildren();
+                for (unsigned i = 0; i < tmp.size(); ++i){
+                    if (tmp[i]->getName() == working) {
+                        tmp.erase(tmp.begin() + i);
+                    }
+                }
+                currentFolder->setChildren(tmp);
+                currentFolder = current;
+                
+                
+                
+				dynamic_cast<Dir*>(destination)->addChild(toMove);
+			}
+			else {
+				std::cerr << "File as a destination not accepted!" << std::endl;
+			}
+		}
+		else {
+			std::cerr << "No destination directory found with the given name. Please try again with another name!" << std::endl;
+		}
+	}
+	else {
+		std::cerr << "No directory or file found with the given name. Please try again with another name!asdasdasdas" << std::endl;
 	}
 }
