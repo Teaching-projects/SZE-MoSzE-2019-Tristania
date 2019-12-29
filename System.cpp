@@ -9,13 +9,6 @@ System::~System(){
 
 }
 
-Node* System::getChild(Dir* dir) const {
-    if (!dir->getChildren().empty()) {
-        return dir->getChildren().at(0);
-    }
-    return nullptr;
-}
-
 Node* System::stringToNode(std::string name) {
     for (auto &n : currentFolder->getChildren()) {
         if (n->getName() == name) {
@@ -34,13 +27,6 @@ bool System::alreadyExists(std::string name) const {
         if (d->getName() == name) {
             return true;
         }
-    }
-    return false;
-}
-
-bool System::hasChildren(Dir* dir) const {
-    if (!dir->getChildren().empty()) {
-        return true;
     }
     return false;
 }
@@ -163,7 +149,7 @@ void System::rm(std::string dirname) {
         
         
         if (Dir* workingDir = dynamic_cast<Dir*>(stringToNode(workdir))) {
-            if (hasChildren(workingDir)) {
+            if (workingDir->hasChildren()) {
                 std::cerr << "This directory cannot be removed as it contains other directories/ files!\n";
             }
         }
@@ -182,7 +168,7 @@ void System::rm(std::string dirname) {
     }
     else {
         if (Dir* work = dynamic_cast<Dir*>(stringToNode(dirname))) {
-            if (hasChildren(work)) std::cerr << "This directory cannot be removed as it contains other directories/ files!\n";
+            if (work->hasChildren()) std::cerr << "This directory cannot be removed as it contains other directories/ files!\n";
         }
 
         if (!alreadyExists(dirname)) {
@@ -211,7 +197,7 @@ void System::rmrf(std::string dirname) {
         }
         
         if (Dir* work = dynamic_cast<Dir*>(stringToNode(working))) {
-            while (hasChildren(work)) {
+            while (work->hasChildren()) {
                 cd(working);
                 rmrf(currentFolder->getChild()->getName());
                 cdBack();
@@ -225,7 +211,7 @@ void System::rmrf(std::string dirname) {
         currentFolder = current;
     } else {
         if (Dir* work = dynamic_cast<Dir*>(stringToNode(dirname))) {
-            while (hasChildren(work)) {
+            while (work->hasChildren()) {
                 cd(dirname);
                 rmrf(work->getChild()->getName());
                 cdBack();

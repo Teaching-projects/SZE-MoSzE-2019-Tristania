@@ -9,6 +9,17 @@ Node* Dir::getChild() {
     return children.at(0);
 }
 
+bool Dir::hasChildren() const {
+    return !children.empty();
+}
+Node* Dir::getChild() const {
+    if (hasChildren())
+    {
+        return children.front();
+    }
+    return nullptr;
+}
+
 void Dir::setChildren(std::vector<Node*> pchildren) {
     children = pchildren;
 }

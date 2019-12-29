@@ -13,7 +13,8 @@ public:
     std::vector<Node*> getChildren();
     Node* getChild();
     void setChildren(std::vector<Node*>);
-    
+    bool hasChildren() const;
+    Node* getChild() const;
     void addChild(Node*);
     void listChildren();
 };
