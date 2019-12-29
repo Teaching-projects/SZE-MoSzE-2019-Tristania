@@ -9,6 +9,10 @@ System::~System(){
 
 }
 
+Dir* System::getCurrentFolder() {
+    return currentFolder;
+}
+
 Node* System::getChild(Dir* dir) const {
     if (!dir->getChildren().empty()) {
         return dir->getChildren().at(0);

@@ -57,7 +57,6 @@ int main() {
 		}
 		else if(tokens[0]=="rm"){
 			if (tokens[1] == "-rf") {
-
                 filesystem.rmrf(tokens[2]);
 			} else {
                 filesystem.rm(tokens[1]);
