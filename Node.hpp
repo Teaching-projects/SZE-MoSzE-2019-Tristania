@@ -12,16 +12,31 @@
 #include <stdio.h>
 #include <string>
 
-
+/**
+ * Parent class for handling files and folders
+*/
 class Node {
 private:
     std::string name;
     Node* parent;
 public:
-    Node(std::string, Node*);
+    /**
+     * @param name sets the node's name
+     * @param parent sets the node's parent folder
+    */
+    Node(std::string name, Node* parent);
+    /**
+     * Get function for the parent folder's pointer
+    */
     Node* getParent() const;
+    /**
+     * Get function for the Node name
+    */
     std::string getName() const;
-    virtual ~Node() = default; //csak a polimorfizmus végett
+    /**
+     * Only needed for polymorphism
+    */
+    virtual ~Node() = default;
     
 };
 
