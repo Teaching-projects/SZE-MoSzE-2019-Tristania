@@ -25,7 +25,7 @@ class System {
 public:
 	System();
     ~System();
-	std::string getCurrent() const;
+	Dir* getCurrentFolder();
 	Node* getChild(Dir*) const;
     Node* stringToNode(std::string);
 
