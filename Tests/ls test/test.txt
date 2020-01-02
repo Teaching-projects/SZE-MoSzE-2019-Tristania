@@ -1,0 +1,10 @@
+mkdir asd
+mkdir 123
+ls
+touch asd/321
+mkdir asd/ert
+ls asd
+touch 456
+touch file
+ls
+exitccitester

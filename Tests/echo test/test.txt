@@ -1,0 +1,6 @@
+echo helloWorld hello
+ls
+touch asd
+ls
+echo echoInTheFile asd
+exitccitester

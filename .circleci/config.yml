@@ -1,32 +1,166 @@
 version: 2
 jobs:
-  build:
+  github_pull:
     machine:
       image: ubuntu-1604:201903-01
     steps:
       - checkout
-      - run: 'make'
       - persist_to_workspace:
-          root: ~/project
+          root: ~/
           paths:
-            - terminal
-            - Tests/*
-      - store_artifacts:
-          path: terminal
-          destination: Binary file
-  test:
-    machine:
-      image: ubuntu-1604:201903-01
+            - project/*.cpp
+            - project/*.hpp
+            - project/Makefile
+            - project/Tests
+            - project/Doxyfile
+
+  build_binary:
+    docker:
+      - image: gaborka98/tristania-build:latest
     steps:
       - attach_workspace:
-          at: ~/project
-      - run: './terminal < Tests/test.txt > Tests/out.txt'
-      - run: 'diff Tests/out.txt Tests/testresult.txt'
+          at: /
+      - run: cd /project
+      - run: make
+      - persist_to_workspace:
+          root: /
+          paths:
+            - project/terminal
+      - store_artifacts:
+          path: /project/terminal
+          destination: Terminal.out
+
+  cd_test:
+    docker:
+      - image: gaborka98/tristania-tests:latest
+    steps:
+      - attach_workspace:
+          at: /
+      - run: cd /project
+      - run: './terminal < Tests/cd\ test/test.txt > Tests/cd\ test/out.txt'
+      - run: 'diff Tests/cd\ test/out.txt Tests/cd\ test/result.txt'
+      
+  echo_test:
+    docker:
+      - image: gaborka98/tristania-tests:latest
+    steps:
+      - attach_workspace:
+          at: /
+      - run: cd /project
+      - run: './terminal < Tests/echo\ test/test.txt > Tests/echo\ test/out.txt'
+      - run: 'diff Tests/echo\ test/out.txt Tests/echo\ test/result.txt'
+
+  ls_test:
+    docker:
+      - image: gaborka98/tristania-tests:latest
+    steps:
+      - attach_workspace:
+          at: /
+      - run: cd /project
+      - run: './terminal < Tests/ls\ test/test.txt > Tests/ls\ test/out.txt'
+      - run: 'diff Tests/ls\ test/out.txt Tests/ls\ test/result.txt'
+
+  mkdir_test:
+    docker:
+      - image: gaborka98/tristania-tests:latest
+    steps:
+      - attach_workspace:
+          at: /
+      - run: cd /project
+      - run: './terminal < Tests/mkdir\ test/test.txt > Tests/mkdir\ test/out.txt'
+      - run: 'diff Tests/mkdir\ test/out.txt Tests/mkdir\ test/result.txt'
+
+  rm_test:
+    docker:
+      - image: gaborka98/tristania-tests:latest
+    steps:
+      - attach_workspace:
+          at: /
+      - run: cd /project
+      - run: './terminal < Tests/rm\ test/test.txt > Tests/rm\ test/out.txt'
+      - run: 'diff Tests/rm\ test/out.txt Tests/rm\ test/result.txt'
+
+  touch_test:
+    docker:
+      - image: gaborka98/tristania-tests:latest
+    steps:
+      - attach_workspace:
+          at: /
+      - run: cd /project
+      - run: './terminal < Tests/touch\ test/test.txt > Tests/touch\ test/out.txt'
+      - run: 'diff Tests/touch\ test/out.txt Tests/touch\ test/result.txt'
+
+  Doxygen_build:
+    docker:
+      - image: gaborka98/tristania-doxygen:latest
+    steps:
+      - attach_workspace:
+          at: /
+      - run: 'cd /project'
+      - run: 'doxygen -g Doxyfile'
+      - run: 'doxygen Doxyfile'
+      - persist_to_workspace:
+          root: /project
+          paths: 
+            - html
+      - store_artifacts:
+          path: /project/html
+          destination: documentation.zip
+  
+  Doxygen_deploy:
+    docker:
+      - image: node:8.10.0
+    steps:
+      - attach_workspace:
+          at: /
+      - run: | 
+          npm install -g --silent gh-pages@2.0.1
+          git config user.email "gaborka812@gmail.com"
+          git config user.name "gaborka98"
+      - add_ssh_keys:
+          fingerprints:
+            - "6f:7e:f9:83:73:2c:56:e4:f8:09:a5:55:7f:72:a4:10"
+      - run: gh-pages --dotfiles --messages "[skip ci] updates" --dist /html
+
 workflows:
   version: 2
-  build_and_test:
+  Basics:
     jobs:
-      - build
-      - test:
+      - github_pull
+      - build_binary:
           requires:
-            - build
+            - github_pull
+      - cd_test:
+          requires:
+            - mkdir_test
+      - echo_test:
+          requires:
+            - touch_test
+      - ls_test:
+          requires:
+            - mkdir_test
+            - touch_test
+      - mkdir_test:
+          requires:
+            - build_binary
+      - rm_test:
+          requires:
+            - mkdir_test
+            - touch_test
+      - touch_test:
+          requires:
+            - build_binary
+      - Doxygen_build:
+          requires:
+            - cd_test
+            - echo_test
+            - ls_test
+            - mkdir_test
+            - rm_test
+            - touch_test
+      - Doxygen_deploy:
+          requires:
+            - Doxygen_build
+          filters:
+            branches:
+              only: master
